@@ -15,3 +15,7 @@ def updateTopSites(cur, userId, topSites):
 def countUserTopSites(cur, userId):
   cur.execute(f'SELECT COUNT("userId") FROM "TopSites" WHERE "userId" = {userId[0]}')
   return cur.fetchone()
+
+def getCapturedTags(cur, userId):
+    cur.execute(f'SELECT "capturedTags" FROM "Captures" WHERE "userId"  = {userId}')
+    return cur.fetchall()
