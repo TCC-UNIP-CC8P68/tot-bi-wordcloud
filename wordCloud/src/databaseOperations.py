@@ -17,5 +17,5 @@ def countUserTopSites(cur, userId):
   return cur.fetchone()
 
 def getCapturedTags(cur, userId):
-    cur.execute(f'SELECT "capturedTags" FROM "Captures" WHERE "userId"  = {userId}')
-    return cur.fetchall()
+  cur.execute(f'SELECT "capturedTags" FROM "Captures" WHERE "userId"  = {userId[0]} AND "capturedTags" IS NOT NULL')
+  return cur.fetchall()
