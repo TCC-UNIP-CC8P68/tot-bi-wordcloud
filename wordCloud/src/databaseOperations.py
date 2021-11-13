@@ -1,3 +1,5 @@
+import psycopg2
+
 def getDistinctUserIds(cur):
   cur.execute('SELECT DISTINCT "userId" FROM "Captures"')
   return cur.fetchall()
@@ -19,3 +21,10 @@ def countUserTopSites(cur, userId):
 def getCapturedTags(cur, userId):
   cur.execute(f'SELECT "capturedTags" FROM "Captures" WHERE "userId"  = {userId[0]} AND "capturedTags" IS NOT NULL')
   return cur.fetchall()
+
+def storeWordCloud(cur, userId):
+  image = open('3-wordcloud.png', 'rb')
+  wordCloud = image.read()
+
+  binaryImage = psycopg2.Binary(wordCloud)
+  cur.execute("INSERT INTO \"WordClouds\" VALUES (%s, %s)", (userId, binaryImage))
