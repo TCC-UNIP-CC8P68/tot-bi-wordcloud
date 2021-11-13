@@ -7,6 +7,7 @@ from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from . import databaseOperations as dbOperations
 import wordcloud
+import os
 
 def wordCloud(cur, conn):
   userIds = dbOperations.getDistinctUserIds(cur)
@@ -32,3 +33,5 @@ def wordCloud(cur, conn):
 
     dbOperations.storeWordCloud(cur, userId)
 
+    # currentPath = os.path.abspath(os.getcwd())
+    # os.remove(f"{currentPath}/{userId[0]}-wordcloud.png")
