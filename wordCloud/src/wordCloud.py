@@ -6,23 +6,18 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from . import databaseOperations as dbOperations
-from .databaseConnection import open, close
 import wordcloud
 
 def wordCloud(cur, conn):
   userIds = dbOperations.getDistinctUserIds(cur)
   for userId in userIds:
     tags = dbOperations.getCapturedTags(cur, userId)
-    print(tags)
-    # eliminar as colunas com valores ausentes
-    summary = tags.dropna(subset=['summary'], axis=0)['summary']
 
-    # concatenar as palavras
-    all_summary = " ".join(s for s in summary)
+    all_summary = " ".join(s[0][0] for s in tags)
 
     # lista de stopword
     stopwords = set(STOPWORDS)
-    stopwords.update(["da", "meu", "em", "você", "de", "ao", "os", "br", "o", "a", "para", "e"])
+    stopwords.update(["da", "meu", "em", "você", "de", "ao", "os", "br", "o", "a", "para", "e", "quot"])
 
     # gerar uma wordcloud
     wordcloud = WordCloud(stopwords=stopwords,
@@ -35,4 +30,4 @@ def wordCloud(cur, conn):
     ax.set_axis_off()
 
     plt.imshow(wordcloud)
-    wordcloud.to_file("teste.png")
+    wordcloud.to_file(f"{userId[0]}-wordcloud.png")
