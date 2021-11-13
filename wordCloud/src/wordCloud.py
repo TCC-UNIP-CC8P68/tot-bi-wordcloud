@@ -19,7 +19,8 @@ def wordCloud(cur, conn):
     stopwords.update(["da", "meu", "em", "você", "de", "ao", "os", "br", "o", "a", "para", "e", "quot"])
 
     wordcloud = WordCloud(stopwords=stopwords,
-                          background_color="black",
+                          background_color=None,
+                          mode="RGBA",
                           width=1600, height=800).generate(all_summary)
 
     fig, ax = plt.subplots(figsize=(10,6))

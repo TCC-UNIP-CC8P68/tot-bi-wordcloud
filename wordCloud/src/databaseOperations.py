@@ -23,7 +23,7 @@ def getCapturedTags(cur, userId):
   return cur.fetchall()
 
 def storeWordCloud(cur, userId):
-  image = open('3-wordcloud.png', 'rb')
+  image = open(f'{userId[0]}-wordcloud.png', 'rb')
   wordCloud = image.read()
 
   binaryImage = psycopg2.Binary(wordCloud)
