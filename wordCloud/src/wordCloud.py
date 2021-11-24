@@ -28,10 +28,4 @@ def wordCloud(cur, conn):
     ax.imshow(wordcloud, interpolation='bilinear')
     ax.set_axis_off()
 
-    plt.imshow(wordcloud)
-    wordcloud.to_file(f"{userId[0]}-wordcloud.png")
-
-    dbOperations.storeWordCloud(cur, userId)
-
-    # currentPath = os.path.abspath(os.getcwd())
-    # os.remove(f"{currentPath}/{userId[0]}-wordcloud.png")
+    dbOperations.updateWordCloud(cur, userId, wordcloud.to_image())
