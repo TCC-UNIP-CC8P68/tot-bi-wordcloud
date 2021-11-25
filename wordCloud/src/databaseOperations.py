@@ -28,16 +28,16 @@ def getCapturedTags(cur, userId):
 def insertWordCloud(cur, userId, wordCloud):
   buffered = BytesIO()
   wordCloud.save(buffered, format="PNG")
-  img_str = base64.b64encode(buffered.getvalue())
+  imgStr = base64.b64encode(buffered.getvalue())
+  decodedStr = imgStr.decode('utf-8')
 
-  cur.execute("INSERT INTO \"WordClouds\" VALUES (%s, %s)", (userId, img_str))
+  cur.execute("INSERT INTO \"WordClouds\" VALUES (%s, %s)", (userId, decodedStr))
 
 
 def updateWordCloud(cur, userId, wordCloud):
+  buffered = BytesIO()
+  wordCloud.save(buffered, format="PNG")
+  imgStr = base64.b64encode(buffered.getvalue())
+  decodedStr = imgStr.decode('utf-8')
 
-  print(wordCloud)
-  # img_str = base64.b64encode(wordCloud)
-
-
-  # cur.execute(f'UPDATE "WordClouds" SET "wordCloud" = \'{img_str}\' WHERE "userId" = {userId[0]}')
-
+  cur.execute(f'UPDATE "WordClouds" SET "wordCloud" = \'{decodedStr}\' WHERE "userId" = {userId[0]}')
