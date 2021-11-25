@@ -28,4 +28,4 @@ def wordCloud(cur, conn):
     ax.imshow(wordcloud, interpolation='bilinear')
     ax.set_axis_off()
 
-    dbOperations.insertWordCloud(cur, userId, wordcloud.to_image())
+    dbOperations.saveWordCloud(cur, userId, wordcloud.to_image())

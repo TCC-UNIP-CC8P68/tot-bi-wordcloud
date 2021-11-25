@@ -31,7 +31,7 @@ def insertWordCloud(cur, userId, wordCloud):
   imgStr = base64.b64encode(buffered.getvalue())
   decodedStr = imgStr.decode('utf-8')
 
-  cur.execute("INSERT INTO \"WordClouds\" VALUES (%s, %s)", (userId, decodedStr))
+  cur.execute("INSERT INTO \"WordClouds\" VALUES (%s, %s)", (userId[0], decodedStr))
 
 
 def updateWordCloud(cur, userId, wordCloud):
@@ -41,3 +41,12 @@ def updateWordCloud(cur, userId, wordCloud):
   decodedStr = imgStr.decode('utf-8')
 
   cur.execute(f'UPDATE "WordClouds" SET "wordCloud" = \'{decodedStr}\' WHERE "userId" = {userId[0]}')
+
+def saveWordCloud(cur, userId, wordCloud):
+  cur.execute(f'SELECT COUNT("wordCloud") FROM "WordClouds" WHERE "userId" = {userId[0]}')
+  userHasWordCloud = cur.fetchone()[0]
+
+  if userHasWordCloud == 0:
+    insertWordCloud(cur, userId, wordCloud)
+  else:
+    updateWordCloud(cur, userId, wordCloud)
