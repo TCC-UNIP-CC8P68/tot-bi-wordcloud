@@ -3,6 +3,10 @@ import base64
 import os
 from io import BytesIO
 
+def getUserEmail(cur, userId):
+  cur.execute(f'SELECT DISTINCT "email" FROM "Users" WHERE "id" = {userId[0]}')
+  return cur.fetchone()
+
 def getDistinctUserIds(cur):
   cur.execute('SELECT DISTINCT "userId" FROM "Captures"')
   return cur.fetchall()
@@ -25,13 +29,13 @@ def getCapturedTags(cur, userId):
   cur.execute(f'SELECT "capturedTags" FROM "Captures" WHERE "userId"  = {userId[0]} AND "capturedTags" IS NOT NULL')
   return cur.fetchall()
 
-def insertWordCloud(cur, userId, wordCloud):
+def insertWordCloud(cur, userId, email, wordCloud):
   buffered = BytesIO()
   wordCloud.save(buffered, format="PNG")
   imgStr = base64.b64encode(buffered.getvalue())
   decodedStr = imgStr.decode('utf-8')
 
-  cur.execute("INSERT INTO \"WordClouds\" VALUES (%s, %s)", (userId[0], decodedStr))
+  cur.execute("INSERT INTO \"WordClouds\" VALUES (%s, %s, %s)", (userId[0], decodedStr, email))
 
 
 def updateWordCloud(cur, userId, wordCloud):
@@ -45,8 +49,9 @@ def updateWordCloud(cur, userId, wordCloud):
 def saveWordCloud(cur, userId, wordCloud):
   cur.execute(f'SELECT COUNT("wordCloud") FROM "WordClouds" WHERE "userId" = {userId[0]}')
   userHasWordCloud = cur.fetchone()[0]
+  userEmail = getUserEmail(cur, userId)
 
   if userHasWordCloud == 0:
-    insertWordCloud(cur, userId, wordCloud)
+    insertWordCloud(cur, userId, userEmail, wordCloud)
   else:
     updateWordCloud(cur, userId, wordCloud)
